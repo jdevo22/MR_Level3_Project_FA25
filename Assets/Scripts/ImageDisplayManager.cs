@@ -9,7 +9,7 @@ public class ImageDisplayManager : MonoBehaviour
     [Tooltip("The Decal Projector whose material will be changed.")]
     [SerializeField] private DecalProjector decalProjector;
 
-    [Header("Performance Settings")]
+    [Header("Performance Setup")]
     [Tooltip("The list of image cues, sorted by display time.")]
     [SerializeField] private List<ImageCue> performanceCues;
 
@@ -55,11 +55,12 @@ public class ImageDisplayManager : MonoBehaviour
             if (performanceTimer >= performanceCues[currentCueIndex + 1].displayTime)
             {
                 currentCueIndex++;
-                ChangeProjectorImage(performanceCues[currentCueIndex].imageTexture);
+                ChangeProjectorImage(performanceCues[currentCueIndex].imageMaterial);
             }
         }
         else
         {
+            Debug.Log("Performance Completed");
             // Optional: What to do when the performance is over
             // For now, we just stop checking.
         }
@@ -68,16 +69,18 @@ public class ImageDisplayManager : MonoBehaviour
     /// <summary>
     /// Changes the texture on the projector's material instance.
     /// </summary>
-    private void ChangeProjectorImage(Texture2D newTexture)
+    private void ChangeProjectorImage(Material newMaterial)
     {
-        if (newTexture == null)
+        if (newMaterial == null)
         {
-            Debug.LogWarning($"Cue {currentCueIndex} has a null texture. Projector will show nothing.");
-            // Could create an Error image to display in the event of a null texture
+            Debug.LogWarning($"Cue {currentCueIndex} has a null material. Projector will show nothing.");
+            // Optionally, you could set the projector's material to null to make it disappear
+            // decalProjector.material = null; 
+            return;
         }
 
-        // "_BaseMap" is the standard name for the main texture in the URP Decal shader
-        projectorMaterialInstance.SetTexture("_BaseMap", newTexture);
-        Debug.Log($"Time: {performanceTimer:F2}s - Displaying cue {currentCueIndex}: {newTexture.name}");
+        // This is the key change: we assign the entire material
+        decalProjector.material = newMaterial;
+        Debug.Log($"Time: {performanceTimer:F2}s - Displaying cue {currentCueIndex}: {newMaterial.name}");
     }
 }

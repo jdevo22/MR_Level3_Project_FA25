@@ -8,9 +8,9 @@ using UnityEngine;
 [System.Serializable]
 public struct ImageCue
 {
-    [Tooltip("The image that will be displayed.")]
-    public Texture2D imageTexture;
+    [Tooltip("The Decal Material that will be projected.")]
+    public Material imageMaterial; // Changed variable type and name
 
-    [Tooltip("The time in seconds since the performance started when this image will appear.")]
+    [Tooltip("The time in seconds since the performance started when this material will appear.")]
     public float displayTime;
 }
